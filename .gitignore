@@ -1,24 +1,27 @@
 # Python bytecode
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
 
-# Virtual environment
+# Virtual environments
 venv/
 env/
 .env/
+env_django/
 
-# Django
+# Django stuff:
 *.log
 *.pot
-*.pyc
-*.pyo
+*.py[cod]
 db.sqlite3
-/media
-/static
+*.sqlite3
+/media/
+staticfiles/
+static/
 
 # VS Code
 .vscode/
 
-
+# System files
+.DS_Store
+Thumbs.db
