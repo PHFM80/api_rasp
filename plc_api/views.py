@@ -3,7 +3,7 @@
 from django.http import JsonResponse
 import snap7
 from snap7.util import get_int
-from snap7 import types
+from snap7 import type as types
 from pymodbus.client import ModbusTcpClient
 
 
