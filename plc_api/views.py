@@ -1,30 +1,50 @@
 # plc_api/views.py
-
+# plc_api/views.py
 from django.http import JsonResponse
 import snap7
+from snap7.util import get_int
+from snap7.types import Areas
+from pymodbus.client import ModbusTcpClient
 
-def leer_dato_plc_view(request):
+
+def leer_dato_s7_view(request):
     try:
-        # Configuración de conexión
-        plc_ip = '192.168.0.3'  # IP del LOGO! 8, ajustala si es distinta
+        plc_ip = '192.168.0.3'
         rack = 0
-        slot = 1  # usualmente 1 en LOGO! 8
+        slot = 1
 
-        # Crear cliente y conectar
         client = snap7.client.Client()
         client.connect(plc_ip, rack, slot)
 
-        # Leer área de entrada (inputs) - 0x81 es el código para entradas (PE)
-        data = client.read_area(snap7.types.Areas.PE, 0, 0, 1)  # leer 1 byte desde la dirección 0
-
-        # La entrada analógica I7 está mapeada como parte de las entradas analógicas, y puede necesitar otra dirección
-        # En LOGO! 8 a veces se accede por DB (data block) o de manera especial, según configuración
-        # Este ejemplo asume acceso básico digital. Para analógicas podría requerir bloques DB y lectura de 2 bytes
+        # Lectura de DB1, posición 0, 2 bytes (ajustar si necesario)
+        data = client.read_area(Areas.DB, 1, 0, 2)
+        valor = get_int(data, 0)
 
         client.disconnect()
 
-        valor = int.from_bytes(data, byteorder='big')  # convertir byte a int
-        return JsonResponse({'dato_plc': valor})
+        return JsonResponse({'valor_s7': valor})
     
+    except Exception as e:
+        return JsonResponse({'error': str(e)})
+
+
+def leer_dato_modbus_view(request):
+    try:
+        plc_ip = '192.168.0.3'
+        port = 502  # o 510 si usás ese
+
+        client = ModbusTcpClient(plc_ip, port=port)
+        client.connect()
+
+        # Leer holding register 0 (ajustá según config del LOGO!)
+        rr = client.read_holding_registers(0, 1, unit=1)
+        client.close()
+
+        if rr.isError():
+            return JsonResponse({'error': 'Error en lectura Modbus'})
+
+        valor = rr.registers[0]
+        return JsonResponse({'valor_modbus': valor})
+
     except Exception as e:
         return JsonResponse({'error': str(e)})
