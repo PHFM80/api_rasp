@@ -11,20 +11,22 @@ def leer_dato_s7_view(request):
     try:
         plc_ip = '192.168.0.3'
         rack = 0
-        slot = 1
+        slot = 0  # para LOGO! 8 suele ser 0
 
         client = snap7.client.Client()
         client.connect(plc_ip, rack, slot)
 
-        data = client.read_area(types.Areas.DB, 1, 0, 2)  # Lee 2 bytes desde DB1, dirección 0
-        valor = get_int(data, 0)
+        # Leer 2 bytes de memoria (por ejemplo, a partir de MB0)
+        data = client.read_area(snap7.types.Areas.MK, 0, 0, 2)
+        valor = snap7.util.get_int(data, 0)
 
         client.disconnect()
 
         return JsonResponse({'valor_s7': valor})
-    
+
     except Exception as e:
         return JsonResponse({'error': str(e)})
+
 
 
 def leer_dato_modbus_view(request):
@@ -36,7 +38,7 @@ def leer_dato_modbus_view(request):
         client.connect()
 
         # Leer holding register 0 (ajustá según config del LOGO!)
-        rr = client.read_holding_registers(0, 1, unit=1)
+        rr = client.read_holding_registers(address=0, count=2, unit=1)
         client.close()
 
         if rr.isError():
