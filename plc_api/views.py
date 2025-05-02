@@ -16,8 +16,7 @@ def leer_dato_s7_view(request):
         client = snap7.client.Client()
         client.connect(plc_ip, rack, slot)
 
-        # Lectura de DB1, posición 0, 2 bytes (ajustar si necesario)
-        data = client.read_area(Areas.DB, 1, 0, 2)
+        data = client.read_area(types.Areas.DB, 1, 0, 2)  # Lee 2 bytes desde DB1, dirección 0
         valor = get_int(data, 0)
 
         client.disconnect()
