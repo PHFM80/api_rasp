@@ -5,6 +5,7 @@ import snap7
 from snap7.util import get_int
 from snap7 import type as types
 from pymodbus.client import ModbusTcpClient
+from snap7.util import get_int
 
 
 def leer_dato_s7_view(request):
@@ -49,3 +50,23 @@ def leer_dato_modbus_view(request):
 
     except Exception as e:
         return JsonResponse({'error': str(e)})
+
+
+
+def leer_analogico_ai1(request):
+    try:
+        plc_ip = '192.168.0.3'      # IP del LOGO!
+        rack, slot = 0, 0          # LOGO! 8 suele usar slot=0
+
+        client = snap7.client.Client()
+        client.connect(plc_ip, rack, slot)
+
+        # 0x84 = Areas.DB (Data Block); DB number=1; offset=0; length=2 bytes (Word VW0)
+        data = client.read_area(0x84, 1, 0, 2)
+        valor_raw = get_int(data, 0)
+
+        client.disconnect()
+        return JsonResponse({'ai1_raw': valor_raw})
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
