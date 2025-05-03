@@ -4,6 +4,7 @@ from django.http import JsonResponse
 import snap7
 from snap7.util import get_int
 from snap7 import type as types
+from snap7 import client
 from pymodbus.client import ModbusTcpClient
 from snap7.util import get_int
 
@@ -55,18 +56,18 @@ def leer_dato_modbus_view(request):
 
 def leer_analogico_ai1(request):
     try:
-        plc_ip = '192.168.0.3'      # IP del LOGO!
-        rack, slot = 0, 0          # LOGO! 8 suele usar slot=0
+        plc_ip = '192.168.0.3'
+        rack = 0
+        slot = 1
 
-        client = snap7.client.Client()
-        client.connect(plc_ip, rack, slot)
+        plc = client.Client()
+        plc.connect(plc_ip, rack, slot)
 
-        # 0x84 = Areas.DB (Data Block); DB number=1; offset=0; length=2 bytes (Word VW0)
-        data = client.read_area(0x84, 1, 0, 2)
-        valor_raw = get_int(data, 0)
+        data = plc.read_area(types.Areas.MK, 0, 0, 2)  # MK = memoria, 2 bytes desde dirección 0
+        valor = get_int(data, 0)
 
-        client.disconnect()
-        return JsonResponse({'ai1_raw': valor_raw})
+        plc.disconnect()
 
+        return JsonResponse({'valor_ai1': valor})
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({'error': str(e)})
