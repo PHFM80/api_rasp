@@ -11,15 +11,17 @@ from snap7.util import get_int
 def leer_analogico_ai1(request):
     try:
         plc = client.Client()
-        plc.connect('192.168.0.3', 0, 1)       # rack=0, slot=1 para LOGO! 8
+        plc.connect('192.168.0.3', 0, 1)   # rack=0, slot=1 para LOGO! 8
 
-        # Leer 2 bytes desde la imagen de entradas (PE), offset 0…1
-        data = plc.read_area(types.Areas.PE, 0, 0, 2)
+        # Leer 2 bytes desde VW0 (área MK)
+        data = plc.read_area(types.Areas.MK, 0, 0, 2)
         valor = get_int(data, 0)
+        print("DEBUG VW0 data:", list(data), "→", valor)
 
         plc.disconnect()
         return JsonResponse({'valor_ai1': valor})
     except Exception as e:
+        print("ERROR leer_analogico_ai1:", e)
         return JsonResponse({'error': str(e)})
 
 
