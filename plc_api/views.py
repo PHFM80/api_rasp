@@ -12,16 +12,14 @@ def leer_analogico_ai1(request):
     try:
         plc = client.Client()
         plc.connect('192.168.0.3', 0, 0)
-        # lee 10 bytes desde VM0
-        data = plc.read_area(types.Areas.MK, 0, 0, 10)
+        # lee 10 bytes desde la imagen de entradas (PE)
+        data = plc.read_area(types.Areas.PE, 0, 0, 10)
         plc.disconnect()
         
-        # imprime en la consola de la API
-        print("DEBUG VM bytes 0–9:", list(data))
-        
-        return JsonResponse({'status': 'bytes printed to console'})
+        print("DEBUG PE bytes 0–9:", list(data))
+        return JsonResponse({'status': 'input bytes printed to console'})
     except Exception as e:
-        print("DEBUG error:", e)
+        print("DEBUG error PE:", e)
         return JsonResponse({'error': str(e)})
 
 

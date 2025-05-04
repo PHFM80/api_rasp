@@ -1,4 +1,3 @@
-print("Cargando rutas de api_rasp")
 from django.contrib import admin
 from django.urls import path, include
 

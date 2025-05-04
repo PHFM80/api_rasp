@@ -1,4 +1,3 @@
-print("Cargando rutas de plc_api")
 from django.urls import path
 from .views import leer_analogico_ai1, leer_estado_lampara
 urlpatterns = [
