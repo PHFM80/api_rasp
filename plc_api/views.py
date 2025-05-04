@@ -10,18 +10,28 @@ from snap7.util import get_int
 
 def leer_analogico_ai1(request):
     try:
-        plc = client.Client()
-        plc.connect('192.168.0.3', 0, 1)   # rack=0, slot=1 para LOGO! 8
+        plc_ip = '192.168.0.3'
+        rack = 0
+        slot = 0
 
-        # Leer 2 bytes desde VW0 (área MK)
-        data = plc.read_area(types.Areas.MK, 0, 0, 2)
-        valor = get_int(data, 0)
-        print("DEBUG VW0 data:", list(data), "→", valor)
+        plc = client.Client()
+        plc.connect(plc_ip, rack, slot)
+
+        # Leer 22 bytes desde VM0 (cubren VW0 a VW20)
+        data = plc.read_area(types.Areas.MK, 0, 0, 22)
+
+        resultados = {}
+        for offset in range(0, 22, 2):
+            valor = get_int(data, offset)
+            etiqueta = f'VW{offset}'
+            resultados[etiqueta] = valor
+            print(f'{etiqueta} = {valor}')
 
         plc.disconnect()
-        return JsonResponse({'valor_ai1': valor})
+
+        return JsonResponse(resultados)
+
     except Exception as e:
-        print("ERROR leer_analogico_ai1:", e)
         return JsonResponse({'error': str(e)})
 
 
