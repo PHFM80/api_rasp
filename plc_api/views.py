@@ -12,11 +12,19 @@ def leer_analogico_ai1(request):
     try:
         plc = client.Client()
         plc.connect('192.168.0.3', 0, 0)
-        data = plc.read_area(types.Areas.MK, 0, 0, 2)  # VW0 en MK
+        # lee 10 bytes desde VM0
+        data = plc.read_area(types.Areas.MK, 0, 0, 10)
         plc.disconnect()
-        return JsonResponse({'valor_ai1': get_int(data, 0)})
+        
+        # imprime en la consola de la API
+        print("DEBUG VM bytes 0–9:", list(data))
+        
+        return JsonResponse({'status': 'bytes printed to console'})
     except Exception as e:
+        print("DEBUG error:", e)
         return JsonResponse({'error': str(e)})
+
+
 
 def leer_estado_lampara(request):
     try:
