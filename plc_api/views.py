@@ -12,7 +12,7 @@ def leer_analogico_ai1(request):
     try:
         plc_ip = '192.168.0.3'
         rack = 0
-        slot = 1
+        slot = 0
 
         plc = client.Client()
         plc.connect(plc_ip, rack, slot)
@@ -32,7 +32,7 @@ def leer_estado_lampara(request):
     try:
         plc_ip = '192.168.0.3'
         rack = 0
-        slot = 0  # LOGO! 8 usualmente usa slot 0
+        slot = 1  # LOGO! 8 usualmente usa slot 0
 
         plc = client.Client()
         plc.connect(plc_ip, rack, slot)
