@@ -8,7 +8,7 @@ from snap7 import client
 from snap7.util import get_bool
 from snap7.util import get_int
 from snap7.client import Client                  # Cliente Snap7 para S7/LOGO!8 :contentReference[oaicite:0]{index=0}
-from snap7.types import Areas   
+from snap7.type import Areas   
 
 
 def leer_analogico_ai1(request):
