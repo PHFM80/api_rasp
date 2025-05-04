@@ -10,42 +10,20 @@ from snap7.util import get_int
 
 def leer_analogico_ai1(request):
     try:
-        plc_ip = '192.168.0.3'
-        rack = 0
-        slot = 0
-
         plc = client.Client()
-        plc.connect(plc_ip, rack, slot)
-
-        data = plc.read_area(types.Areas.MK, 0, 0, 2)  # MK = memoria, 2 bytes desde dirección 0
-        valor = get_int(data, 0)
-
+        plc.connect('192.168.0.3', 0, 0)
+        data = plc.read_area(types.Areas.MK, 0, 0, 2)  # VW0 en MK
         plc.disconnect()
-
-        return JsonResponse({'valor_ai1': valor})
+        return JsonResponse({'valor_ai1': get_int(data, 0)})
     except Exception as e:
         return JsonResponse({'error': str(e)})
-    
-
 
 def leer_estado_lampara(request):
     try:
-        plc_ip = '192.168.0.3'
-        rack = 0
-        slot = 1  # LOGO! 8 usualmente usa slot 0
-
         plc = client.Client()
-        plc.connect(plc_ip, rack, slot)
-
-        # Leer 1 byte desde dirección 0 de la memoria (VM0)
-        data = plc.read_area(types.Areas.MK, 0, 0, 1)
-
-        # Extraer el bit 0 (VB0.0)
-        estado = get_bool(data, 0, 0)
-
+        plc.connect('192.168.0.3', 0, 0)
+        data = plc.read_area(types.Areas.PA, 0, 0, 1)  # VB0.0 en PA
         plc.disconnect()
-
-        return JsonResponse({'lampara': 'ON' if estado else 'OFF'})
-
+        return JsonResponse({'lampara': 'ON' if get_bool(data, 0, 0) else 'OFF'})
     except Exception as e:
         return JsonResponse({'error': str(e)})
