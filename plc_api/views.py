@@ -7,15 +7,11 @@ from snap7 import type as types
 from snap7 import client
 from snap7.util import get_bool
 from snap7.util import get_int
-from snap7.client import Client                  # Cliente Snap7 para S7/LOGO!8 :contentReference[oaicite:0]{index=0}
+from snap7.client import Client                  
 from snap7.type import Areas   
 
 
 def leer_analogico_ai1(request):
-    """
-    Vista Django que lee las palabras VW0 y VW1 de la memoria variable (VM)
-    del LOGO!8 expuesto como DataBlock 1, y las devuelve en JSON.
-    """
 
     plc_ip = '192.168.0.3'                         # IP configurada del LOGO! 
     rack, slot = 0, 0                              # TSAP típicos para LOGO!8 :contentReference[oaicite:4]{index=4}
@@ -39,7 +35,6 @@ def leer_analogico_ai1(request):
 
     finally:
         plc.disconnect()                          # Asegurar cierre de conexión 
-
 
 
 def leer_estado_lampara(request):
