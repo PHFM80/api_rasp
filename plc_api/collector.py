@@ -12,8 +12,8 @@ SENSOR_ID = 1  # ID del sensor   cambiar SENSOR_ID por id_sensor
 LAMP_ID   = 1  # ID del actuador    cambiar LAMP_ID por id_actuador
 
 # URLs de las APIs locales
-URL_SENSOR = "http://192.168.1.37:8000/plantas/datos-sensor/"
-URL_LAMP   = "http://192.168.1.37:8000/plantas/evento-actuador/"
+URL_SENSOR = "http://192.168.1.37:8000/plantas/datos-sensor-create/"
+URL_LAMP   = "http://192.168.1.37:8000/plantas/evento-actuador-create/"
 
 # Función para leer el valor del sensor
 def leer_sensor():
