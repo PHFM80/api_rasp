@@ -25,3 +25,5 @@ static/
 # System files
 .DS_Store
 Thumbs.db
+
+plc_api\collector_config.json

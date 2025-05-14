@@ -1,9 +1,10 @@
 # api_rasp\plc_api\urls.py
 
 from django.urls import path
-from .views import leer_analogico_ai1, leer_estado_lampara
+from .views import leer_sensor_pi4_view, accionar_actuador_pi4_view
+
 urlpatterns = [
-    path('leer_ai1/', leer_analogico_ai1, name='leer_ai1'),
-    path('api/lamp/', leer_estado_lampara, name='leer_estado_lampara'),
+    path('leer-sensor-pi4/', leer_sensor_pi4_view, name='leer-sensor-pi4'),
+    path('accionar-actuador-pi4/', accionar_actuador_pi4_view, name='accionar-actuador-pi4'),
 ]
 
